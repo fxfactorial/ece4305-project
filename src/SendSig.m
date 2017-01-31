@@ -33,21 +33,29 @@ sdr.mode = 'transmit';
 tsym = 1/Fs:1/Fs:ch_size/4/Fs;
 tFilt = 1/Fs:1/Fs:ch_size/8/Fs;
 
+%%Baseband Modulation Frequency and Amplitude, the Modulation Fmod may not be needed
 Fmod = 200e3;
 amplitude = 1024*8;
 
+%%Gaussian Filter that pulse shapes the transmit signal for less wideband noise
 gaussFiltRight = exp(-tFilt .^ 2 / (2 * .002 ^ 2));
 gaussFilt = [fliplr(gaussFiltRight) gaussFiltRight];
 
+%%Generate two test signals that are modulated in the baseband to Fmod+Signal
 sig1 = sin(2*pi*(1000+Fmod)*tsym).*amplitude;
 sig0 = sin(2*pi*(10000+Fmod)*tsym).*amplitude;
 
+%%This is where the the pulse shape filter actually shapes the data symbol
 sig1 = sig1.*gaussFilt;
 sig0 = sig0.*gaussFilt;
 
+%%create mulitple fsk signals in the same frame
 frame1 = [sig1 sig1 sig1 sig1];
 frame0 = [sig0 sig0 sig0 sig0];
 
+
+
+%%Hilbert transform removes the unwanted lower sideband and gives good transmit performance
 frame1 = hilbert(frame1);
 frame0 = hilbert(frame0);
 
