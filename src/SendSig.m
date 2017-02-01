@@ -4,7 +4,7 @@ clear all;
 % Public, non-tunable properties.
 sdr = PlutoSDR;
 %mode Transceiver mode of SDR
-ch_size = 8192*32;
+ch_size = 8192*64;
 Fs = 5e6;
 %in_ch_size Input data channel size [samples]
 sdr.in_ch_size = ch_size;
@@ -25,7 +25,7 @@ sdr.tx_center_freq = 915e6;         % TX_LO_FREQ
 %tx_sample_rate Sample rate of TX chain(s) [Hz]
 sdr.tx_sample_rate = Fs;       % TX_SAMPLING_FREQ
 %tx_rf_bandwidth Bandwidth of transmit filter [Hz]
-sdr.tx_rf_bandwidth = 10e6;         % TX_RF_BANDWIDTH
+sdr.tx_rf_bandwidth = 1e6;         % TX_RF_BANDWIDTH
 
 sdr.mode = 'transmit';
 
