@@ -80,7 +80,7 @@ classdef spectrumSweeper <handle
     methods (Access = private)
         
         % createRadio
-        function sdr = createRadio(rx_center_freq, rx_rf_bandwidth, rx_sample_rate)
+        function sdr = createRadio(this, rx_center_freq, rx_rf_bandwidth, rx_sample_rate)
             sdr = PlutoSDR;
             %mode Transceiver mode of SDR
             sdr.mode = 'receive';

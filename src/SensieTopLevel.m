@@ -8,7 +8,7 @@ while (1 == 2)
     
     % get spectrum
     spectrum = sweeper.getSpectrum();
-    [spectrum_q , scaling_factor] = scaleToInt (spectrum, 8);
+    [spectrum_q , scaling_factor] = sweeper.scaleToInt (spectrum, 8);
     
     %transmitter = AgletTransmitter;
     
