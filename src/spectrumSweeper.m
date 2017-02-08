@@ -43,7 +43,7 @@ classdef spectrumSweeper <handle
                 sweep_data = [];
                 for n = 1:minor_sweeps
                     Fc = this.freq_min + this.rf_bw*n - bb_bw;
-                    sdr = createRadio(Fc, this.rf_bw, Fs);
+                    sdr = this.createRadio(Fc, this.rf_bw, Fs);
                     signal = sdr.receive();
                     freqData = abs(fft(signal, freq_bins));
                     sweep_data = [sweep_data freqData.'];
@@ -59,20 +59,18 @@ classdef spectrumSweeper <handle
             spectrum = log(spectrum);
         end
         
-        function [spectrum_q, scaling_factor] = scaleToInteger(spectrum, n)
+        function [spectrum_q, scaling_factor] = scaleToInteger(this, spectrum, n)
             num_bits = n;
-            max = 2^num_bits - 1;
-            UINT = numerictype(0, num_bits);
-
+            max_num = 2^num_bits - 1;
 
             % get max magnitude in spectrum for scaling
             max_mag = max(spectrum);
             % get factor to scale spectrum to fit in data type
-            scaling_factor = max/max_mag;
+            scaling_factor = max_num/max_mag;
             % scale spectrum
-            spectrum_scaled = spec_log * scaling_factor;
+            spectrum_scaled = spectrum * scaling_factor;
             % quantize scaled spectrum to data type
-            spectrum_q = quantize (spectrum_scaled, UINT);
+            spectrum_q = uint8(spectrum_scaled);
         end
     end
     
@@ -89,9 +87,9 @@ classdef spectrumSweeper <handle
             %dev_name Device name
             sdr.dev_name = 'ad9364';
             %in_ch_size Input data channel size [samples]
-            sdr.in_ch_size = 1024;
+            sdr.in_ch_size = 1e5;
             %out_ch_size Output data channel size [samples]
-            sdr.out_ch_size = 1024;
+            sdr.out_ch_size = 1e5;
             %rx_center_freq Center frequency of RX chain(s) [Hz]
             sdr.rx_center_freq = rx_center_freq;          % RX_LO_FREQ
             %rx_sample_rate Sample rate of RX chain(s) [Hz]
