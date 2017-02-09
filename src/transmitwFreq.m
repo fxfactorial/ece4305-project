@@ -103,7 +103,7 @@ figure(1)
 plot(real(dataFilter))
 
 fftData = abs(fft(dataFilter));
-[fMax, ~] = max(fftData);
+[~, fMax] = max(fftData);
 
 if(fftData(fMax - 356) < fftData(fMax + 356))
     lowFreq = fMax;
