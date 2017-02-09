@@ -6,3 +6,7 @@ Project files for ECE 4305 C'17
 - Denver Cohen
 - Calvin Figuereo-Supraner
 - Michael J. Inserra
+- Scott Iwanicki
+- Samuel List
+- Patrick Long
+- Michael Paquette
