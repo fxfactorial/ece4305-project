@@ -64,7 +64,7 @@ frame0 = hilbert(frame0);
 
 %% Transceive with SDR
 
-frames = 15;
+frames = 10;
 data = [];
 for frame = 1:frames
     % Call radio
@@ -82,27 +82,18 @@ for frame = 1:frames
 end
 
 %% Filter Signal
-
-%Poor mans high pass
-% i = 1;
-% len = 50;
-% while i < length(data) - (len + 1)
-%     data(i:(i+len)) = data(i:(i+len))-mean(data(i:(i+len)));
-%     i = i + len + 1;
-% end
-
 bFilt = designfilt('bandpassfir', ...
                    'FilterOrder',100, ...
                    'CutoffFrequency1',2.0009e5, ...
                    'CutoffFrequency2',2.0501e5, ...
                    'SampleRate',Fs);
                
-dataFilter = filter(bFilt, data);              
+dataFilter = filter(bFilt, data);
 
 figure(1)
 plot(real(dataFilter))
 
-fftData = abs(fft(dataFilter));
+fftData = abs(fft(dataFilter, Fs));
 [~, fMax] = max(fftData);
 
 if(fftData(fMax - 356) < fftData(fMax + 356))
@@ -114,6 +105,11 @@ else
 end
 
 figure(2)
-plot(fftData)
 
+low = 1;%2e5;
+high = 1e6;%2.01e5;
+
+freqs = 1000.*(low/Fs:1/Fs:high/Fs);
+plot(freqs,fftData(low:high))
+xlabel('kHz');
 clear sdr;
