@@ -1,6 +1,7 @@
 %%Set Up SDR Coefs
 addpath(genpath('../drivers'));
 clear all;
+close all;
 % Public, non-tunable properties.
 sdr = PlutoSDR;
 %mode Transceiver mode of SDR
@@ -41,7 +42,7 @@ amplitude = 1024;
 gaussFiltRight = exp(-tFilt .^ 2 / (2 * .002 ^ 2));
 gaussFilt = [fliplr(gaussFiltRight) gaussFiltRight];
 
-%TxFlt = comm.RaisedCosineTransmitFilter('OutputSamplesPerSymbol', 1, 'FilterSpanInSymbols', 8);
+% TxFlt = comm.RaisedCosineTransmitFilter('OutputSamplesPerSymbol', 1, 'FilterSpanInSymbols', 8);
 
 %%Generate two test signals that are modulated in the baseband to Fmod+Signal
 sig1 = sin(2*pi*(700+Fmod)*tsym).*amplitude;
@@ -51,8 +52,8 @@ sig0 = sin(2*pi*(200+Fmod)*tsym).*amplitude;
 sig1 = sig1.*gaussFilt;
 sig0 = sig0.*gaussFilt;
 
-%sig1 = step(TxFlt, sig1);
-%sig0 = step(TxFlt, sig0);
+% sig1 = step(TxFlt, sig1);
+% sig0 = step(TxFlt, sig0);
 
 %%create mulitple fsk signals in the same frame
 frame1 = [sig1 sig1 sig1 sig1];
@@ -94,22 +95,47 @@ figure(1)
 plot(real(dataFilter))
 
 fftData = abs(fft(dataFilter, Fs));
+% 'Carrier' is the max freq
 [~, fMax] = max(fftData);
 
-if(fftData(fMax - 356) < fftData(fMax + 356))
+% Exact other freq is not know, so search an area
+freqSep = 450;
+halfWindow = 100;
+[a1, f1] = max(fftData(fMax-freqSep-halfWindow:fMax-freqSep+halfWindow));
+[a2, f2] = max(fftData(fMax+freqSep-halfWindow:fMax+freqSep+halfWindow));
+
+if(a1 < a2) % 'Carrier' is lower frequency
     lowFreq = fMax;
-    highFreq = fMax + 356;
-else
-    lowFreq = fMax - 356;
+    highFreq = fMax + freqSep + (f2-halfWindow-1);
+else % 'Carrier' is higher frequency
+    lowFreq = fMax - freqSep + (f1-halfWindow-1);
     highFreq = fMax;
 end
 
 figure(2)
 
-low = 1;%2e5;
-high = 1e6;%2.01e5;
+low = 1;
+high = 1e6;
 
 freqs = 1000.*(low/Fs:1/Fs:high/Fs);
 plot(freqs,fftData(low:high))
 xlabel('kHz');
+
+figure(3);
+low = lowFreq-1e3;
+high = highFreq+1e3;
+
+x = (1000/Fs).*[lowFreq highFreq];
+y = [fftData(lowFreq) fftData(highFreq)];
+
+
+freqs = 1000.*(low/Fs:1/Fs:high/Fs);
+plot(freqs, fftData(low:high))
+hold on
+scatter(x, y, 100)
+hold off
+
+xlabel('kHz');
+
+
 clear sdr;
