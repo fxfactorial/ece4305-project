@@ -93,6 +93,7 @@ dataFilter = filter(bFilt, data);
 
 figure(1)
 plot(real(dataFilter))
+title('Recieved Signal');
 
 fftData = abs(fft(dataFilter, Fs));
 % 'Carrier' is the max freq
@@ -117,25 +118,34 @@ figure(2)
 low = 1;
 high = 1e6;
 
-freqs = 1000.*(low/Fs:1/Fs:high/Fs);
+freqs = 1e4.*(low/Fs:1/Fs:high/Fs);
 plot(freqs,fftData(low:high))
 xlabel('kHz');
+title('Wideband Spectrum');
 
 figure(3);
 low = lowFreq-1e3;
 high = highFreq+1e3;
 
-x = (1000/Fs).*[lowFreq highFreq];
+x = (1e4/Fs).*[lowFreq highFreq];
 y = [fftData(lowFreq) fftData(highFreq)];
 
 
-freqs = 1000.*(low/Fs:1/Fs:high/Fs);
+freqs = 1e4.*(low/Fs:1/Fs:high/Fs);
 plot(freqs, fftData(low:high))
 hold on
 scatter(x, y, 100)
+a = x';
+b = num2str(a);
+c = strcat(b, [' kHz';' kHz']);
+d = cellstr(c);
+
+dx = 0.05; dy = 0.1; % displacement so the text does not overlay the data points
+
+text(x+dx, y+dy, d);
 hold off
 
 xlabel('kHz');
-
+title('Narrowband Spectrum');
 
 clear sdr;
