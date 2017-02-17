@@ -8,9 +8,9 @@ classdef spectrumSweeper <handle
         % minimum frequency Hz
         freq_min        = 1900e6;  
         % rf bandwidth of minor sweeps
-        rf_bw           = 40e6;
+        rf_bw           = 5e6;
         % num major sweeps
-        major_sweeps    = 3;                     
+        major_sweeps    = 1;                     
     end
     
     %% methods
@@ -87,13 +87,13 @@ classdef spectrumSweeper <handle
             %dev_name Device name
             sdr.dev_name = 'ad9364';
             %in_ch_size Input data channel size [samples]
-            sdr.in_ch_size = 1e5;
+            sdr.in_ch_size = 1024;
             %out_ch_size Output data channel size [samples]
-            sdr.out_ch_size = 1e5;
+            sdr.out_ch_size = 1024;
             %rx_center_freq Center frequency of RX chain(s) [Hz]
             sdr.rx_center_freq = rx_center_freq;          % RX_LO_FREQ
             %rx_sample_rate Sample rate of RX chain(s) [Hz]
-            sdr.rx_sample_rate = rx_sample_rate;        % RX_SAMPLING_FREQ
+            sdr.rx_sample_rate = rx_sample_rate/2;        % RX_SAMPLING_FREQ
             %rx_rf_bandwidth Bandwidth of receive filter [Hz]
             sdr.rx_rf_bandwidth = rx_rf_bandwidth;         % RX_RF_BANDWIDTH
             %rx_gain_mode AGC mode
@@ -103,7 +103,7 @@ classdef spectrumSweeper <handle
             %tx_center_freq Center frequency of TX chain(s) [Hz]
             sdr.tx_center_freq = rx_center_freq ;         % TX_LO_FREQ
             %tx_sample_rate Sample rate of TX chain(s) [Hz]
-            sdr.tx_sample_rate = rx_sample_rate;        % TX_SAMPLING_FREQ
+            sdr.tx_sample_rate = rx_sample_rate/2;        % TX_SAMPLING_FREQ
             %tx_rf_bandwidth Bandwidth of transmit filter [Hz]
             sdr.tx_rf_bandwidth = rx_rf_bandwidth;         % TX_RF_BANDWIDTH
         end
