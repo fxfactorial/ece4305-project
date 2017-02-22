@@ -28,21 +28,19 @@ classdef spectrumSweeper <handle
         % getSpectrum
         function spectrum = getSpectrum(this)
             
-            % bandwidth of minor sweep in Hz
-            bb_bw           = this.rf_bw / 2;  
             % num minor sweeps
             minor_sweeps    = this.sweep_range / this.rf_bw;  
             % num freq bins
-            freq_bins       = this.rf_bw / 1000; 
+            freq_bins       = 1; 
             % sampling rate
-            Fs              = 2 * bb_bw; 
+            Fs              = this.rf_bw; 
             % data of size sweepData x major sweeps
-            data = zeros(this.sweep_range/1000, this.major_sweeps);    
+            data = zeros(this.sweep_range/this.rf_bw, this.major_sweeps);    
             
             for i = 1:this.major_sweeps
                 sweep_data = [];
                 for n = 1:minor_sweeps
-                    Fc = this.freq_min + this.rf_bw*n - bb_bw;
+                    Fc = this.freq_min + this.rf_bw*n - this.rf_bw/2;
                     sdr = this.createRadio(Fc, this.rf_bw, Fs);
                     signal = sdr.receive();
                     freqData = abs(fft(signal, freq_bins));
@@ -71,6 +69,7 @@ classdef spectrumSweeper <handle
             spectrum_scaled = spectrum * scaling_factor;
             % quantize scaled spectrum to data type
             spectrum_q = uint8(spectrum_scaled);
+            scaling_factor = uint8(scaling_factor);
         end
     end
     
