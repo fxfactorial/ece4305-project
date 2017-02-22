@@ -58,7 +58,7 @@ sig0 = sin(2*pi*(freq2+Fmod)*tsym).*amplitude;
 
 
 txFilt = designfilt('bandpassfir', ...
-                   'FilterOrder',120, ...
+                   'FilterOrder',30, ...
                    'CutoffFrequency1',abs(Fmod-freqdelt/2), ...
                    'CutoffFrequency2',abs(Fmod+freqdelt/2), ...
                    'SampleRate',Fs);
@@ -118,7 +118,7 @@ clear sdr;
 % end
 
 bFilt = designfilt('bandpassfir', ...
-                   'FilterOrder',120, ...
+                   'FilterOrder',30, ...
                    'CutoffFrequency1',abs(Fmod-freqdelt/2), ...
                    'CutoffFrequency2',abs(Fmod+freqdelt/2), ...
                    'SampleRate',Fs);
@@ -127,33 +127,36 @@ dataFilter = filter(bFilt, data);
 
 figure(1)
 plot(real(dataFilter))
-% 
-% fftData = abs(fft(dataFilter));
-% [fMax, ~] = max(fftData);
-% 
-% 
-% 
-%figure(2)
-%plot(fftData)
-
-%dataFilter = dataFilter(end+1-(numberofbits-1)*length(sig0):end);
 
 
-%rxsig = fskdemod(dataFilter, 2, freqdelt, length(sig0), Fs);
 rxsig = fmdemod(real(dataFilter), Fmod, Fs, freqdelt);
-%Lowpass filter
-bFilt = designfilt('lowpassfir', ...
-                   'FilterOrder',150, ...
-                   'CutoffFrequency',.01, ...
-                   'SampleRate',Fs);
-               
-rxsig_filt = filtfilt(bFilt, rxsig(4.195e6:end));
+
+%Create Lowpass Filter
+Fpass = 1000;        % Passband Frequency
+Fstop = 10000;       % Stopband Frequency
+Apass = 1;           % Passband Ripple (dB)
+Astop = 80;          % Stopband Attenuation (dB)
+match = 'stopband';  % Band to match exactly
+
+% Construct an FDESIGN object and call its BUTTER method.
+h  = fdesign.lowpass(Fpass, Fstop, Apass, Astop, Fs);
+bFilt = design(h, 'butter', 'MatchExactly', match);
+
+%Run the data through the lowpass filter
+rxsig_filt = filter(bFilt, rxsig);
+
+%duplicate (for plotting)
+rxsig_filt1 = rxsig_filt;
 avg = 0;
+
+%map data to 0s and 1s
 for k = 1:length(rxsig_filt)
    if rxsig_filt(k) <  1.75 &&  rxsig_filt(k) > 1.25
         rxsig_filt(k) = 0;
    elseif rxsig_filt(k) < .75 &&  rxsig_filt(k) > .25
         rxsig_filt(k) = 1;
+   elseif k == 1 || rxsig_filt(k) > 10 || rxsig_filt(k) < -10
+       rxsig_filt(k) = -1;
    else
        rxsig_filt(k) = rxsig_filt(k-1);
    end
