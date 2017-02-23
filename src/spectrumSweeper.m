@@ -41,6 +41,7 @@ classdef spectrumSweeper <handle
                 sweep_data = [];
                 for n = 1:minor_sweeps
                     Fc = this.freq_min + this.rf_bw*n - this.rf_bw/2;
+                    disp(['Receving at carrier ', num2str(Fc/1000000), 'MHz'])
                     sdr = this.createRadio(Fc, this.rf_bw, Fs);
                     signal = sdr.receive();
                     freqData = abs(fft(signal, freq_bins));
