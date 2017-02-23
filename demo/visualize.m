@@ -1,7 +1,6 @@
 function [dataArray] = visualize(data, dataArray)
 % Takes in data and visualizes it in an updating waterfall plot.
 
-%% Grab global state
 % Before this function is called, dataArray has to be preallocated as an
 % empty array. In the main script, set it to 'zeros(20, 120)'
 
