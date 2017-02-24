@@ -15,7 +15,7 @@ function [sdr] = initSdr(ch_size, Fs, center_freq, rx_bw, tx_bw, rx_gain, agc_mo
     %out_ch_size Output data channel size [samples]
     sdr.out_ch_size = ch_size;
     %rx_center_freq Center frequency of RX chain(s) [Hz]
-    sdr.rx_center_freq = center_freq;          % RX_LO_FREQ
+    sdr.rx_center_freq = center_freq - 100e6;          % RX_LO_FREQ
     %rx_sample_rate Sample rate of RX chain(s) [Hz]
     sdr.rx_sample_rate = Fs;        % RX_SAMPLING_FREQ
     %rx_rf_bandwidth Bandwidth of receive filter [Hz]
