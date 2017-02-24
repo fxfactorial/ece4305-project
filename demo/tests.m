@@ -30,3 +30,12 @@ for i = 1:20
     dataArray = visualize(data,dataArray);
 end
 disp('visualize.m passed tests!');
+
+%% binary2waveform.m
+
+% Define constants
+bFrame = repmat([1 1],1,128);%round(rand(1,256));
+ch_size = 2^20;
+Fs = 30.72e6; % grabbed value from some other script
+wFrame = binary2waveform(bFrame,ch_size,Fs);
+plot(abs(wFrame))
