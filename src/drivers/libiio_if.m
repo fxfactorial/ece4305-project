@@ -98,6 +98,8 @@ classdef libiio_if < handle
 
             % Set the return code to success
             ret = 0;
+                            msg_log = [];
+
         end
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -156,6 +158,8 @@ classdef libiio_if < handle
 
             % Set the return code to success
             ret = 0;
+                            msg_log = [];
+
         end
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -202,7 +206,8 @@ classdef libiio_if < handle
             msg_log = [msg_log sprintf('%s: %s was found in the system\n', class(obj), obj.dev_name)];
 
             % Set the return code to success
-            ret = 0;
+            ret = 0;                msg_log = [];
+
         end
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -245,7 +250,7 @@ classdef libiio_if < handle
                         obj.iio_scan_elm_no = obj.iio_scan_elm_no + 1;
                     end
                 end
-                msg_log = [msg_log sprintf('%s: Found %d output channels for the device %s\n', class(obj), obj.iio_scan_elm_no, obj.dev_name)];
+                %msg_log = [msg_log sprintf('%s: Found %d output channels for the device %s\n', class(obj), obj.iio_scan_elm_no, obj.dev_name)];
 
                 % Check if the number of channels in the device
                 % is greater or equal to the system object
@@ -275,7 +280,8 @@ classdef libiio_if < handle
             msg_log = [msg_log sprintf('%s: %s output data channels successfully initialized\n', class(obj), obj.dev_name)];
 
             % Set the return code to success
-            ret = 0;
+            ret = 0;                msg_log = [];
+
         end
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -337,7 +343,8 @@ classdef libiio_if < handle
             msg_log = [msg_log sprintf('%s: %s input data channels successfully initialized\n', class(obj), obj.dev_name)];
 
             % Set the return code to success
-            ret = 0;
+            ret = 0;                msg_log = [];
+
         end
 
     end
@@ -446,11 +453,13 @@ classdef libiio_if < handle
             if(strcmp(dev_type, 'IN'))
                 [ret, err_msg, msg_log_new] = initInputDataChannels(obj, data_ch_no, data_ch_size);
                 msg_log = [msg_log msg_log_new];
+                msg_log = [];
                 if(ret < 0)
                     releaseContext(obj);
                     return;
                 end
             end
+                msg_log = [];
 
             % Set the initialization status to success
             obj.if_initialized = 1;
