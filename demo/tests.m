@@ -1,4 +1,5 @@
 %% frames2data.m, data2frames.m
+clearvars;
 
 % Define constants
 dataTX = 1:120;
@@ -13,6 +14,7 @@ assert(all(abs(dataTX-dataRX) < 1e-3));
 disp('frame2data.m and data2frames.m passed tests!');
 
 %% visualize.m
+clearvars;
 
 % Define constants
 dataArray = zeros(20,120);
@@ -32,6 +34,7 @@ end
 disp('visualize.m passed tests!');
 
 %% frames2waveforms.m
+clearvars;
 
 % Define constants
 dataTX = 1:120;
