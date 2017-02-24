@@ -31,11 +31,16 @@ for i = 1:20
 end
 disp('visualize.m passed tests!');
 
-%% binary2waveform.m
+%% frames2waveforms.m
 
 % Define constants
-bFrame = repmat([1 1],1,128);%round(rand(1,256));
+dataTX = 1:120;
+scaling = 50;
+frames = data2frames(dataTX,scaling);
 ch_size = 2^20;
 Fs = 30.72e6; % grabbed value from some other script
-wFrame = binary2waveform(bFrame,ch_size,Fs);
-plot(abs(wFrame))
+
+% Convert to waveforms
+waveforms = frames2waveforms(frames,ch_size,Fs);
+plot(waveforms(1,(1:ch_size)));
+disp('frames2waveforms.m passed tests!');
