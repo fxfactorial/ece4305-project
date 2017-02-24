@@ -44,8 +44,10 @@ classdef spectrumSweeper <handle
                     disp(['Receving at carrier ', num2str(Fc/1000000), 'MHz'])
                     sdr = this.createRadio(Fc, this.rf_bw, Fs);
                     signal = sdr.receive();
-                    freqData = abs(fft(signal, freq_bins));
+                    freqData = sum(abs(signal).^2);
                     sweep_data = [sweep_data freqData.'];
+                    figure(1), semilogy(sweep_data), drawnow
+
                 end
                 data(:,i) = sweep_data;
             end

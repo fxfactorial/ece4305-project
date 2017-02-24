@@ -3,7 +3,7 @@ addpath(genpath('../drivers'));
 
 FREQ_MIN = 700e6;
 kHz = 1000; % Hz
-Tx_INT = 4; % Minutes
+Tx_INT = 2; % Minutes
 
 while (0 == 0)
     % create sweeper object (could also use constructor)
