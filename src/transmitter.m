@@ -5,7 +5,7 @@ function [finished] = transmitter(dataBin)
     assert(data_len > 0, 'Transmit() was passed empty data');
     
     % initalize SDR
-    sdr = initSdr(2^20, 30.72e6, 916e6, 2e6, 5e6, 15, 'manual', 'transmit');
+    sdr = initSdr(2^20, 30.72e6, 916e6, 2e6, 5e6, 15, 'fast-attack', 'transmit');
     
     numFrames = size(dataBin,1);
     
@@ -18,6 +18,7 @@ function [finished] = transmitter(dataBin)
 
 %% Transmit Data
     dataRec = [];
+    pause
     for frame = 1:numFrames % should output 1-5 
         % Transceive with SDR
         transmitFrame = dataWave(frame,:);
