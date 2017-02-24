@@ -61,7 +61,7 @@ classdef PlutoSDR < handle
             if obj.device_ran
                 error('Cannot update device once active.  Clear object and setup with desired config or setup another.');
             end
-            disp('Updating Config');
+            %disp('Updating Config');
             obj.radio.releaseImpl();
             switch obj.mode
                 case 'transmit'
