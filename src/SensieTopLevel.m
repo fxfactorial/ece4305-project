@@ -15,6 +15,7 @@ while (0 == 0)
     disp('Beginning spectrum sweep...')
     spectrum = sweeper.getSpectrum();
     % scale to 8 bit integer
+    disp('Scaling data...');
     [spectrum_q , scaling_factor] = sweeper.scaleToInteger (spectrum, 8); 
     
     % wait until next Tx syncronization time
