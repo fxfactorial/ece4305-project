@@ -1,0 +1,9 @@
+function [finished] = txWrapper(data, scalingFactor)
+% Wrapper function to get data (in) to TX'd waveforms (out)
+
+finished = ...
+    waveforms2transmit( ...
+    frames2waveforms( ...
+    data2frames(data,scalingFactor)));
+
+end
