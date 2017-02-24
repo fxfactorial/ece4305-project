@@ -46,7 +46,11 @@ classdef spectrumSweeper <handle
                     signal = sdr.receive();
                     freqData = sum(abs(signal).^2);
                     sweep_data = [sweep_data freqData.'];
-                    figure(1), semilogy(sweep_data), drawnow
+                     x_axis = (this.freq_min : this.rf_bw : ...
+                        ((length(sweep_data) - 1)*this.rf_bw + this.freq_min))./1e6;
+                    figure(1), semilogy(x_axis,sweep_data), xlabel('Frequency(MHz)')
+                    
+                    drawnow
 
                 end
                 data(:,i) = sweep_data;
