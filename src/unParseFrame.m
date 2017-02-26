@@ -3,22 +3,23 @@ function [data] = unParseFrame(stream)
 %   Detailed explanation goes here
 
     %header Structure
-    %Preamble          - 16 bits
-    %Quant Factor      - 16 bits
+    %Preamble          -   13 bits (Barker Code)
+    %Frame Num         -    3 bits
+    %Quant Factor      -   16 bits
     %Data CRCs         - 32*4 bits
-    %Zero Padding      - 64 bits
-    %Header CRC        - 32  bits
+    %Zero Padding      -   64 bits
+    %Header CRC        -   32 bits
     
-    preambleRef = repmat([1 0], 1, 8);
+    preambleRef = [1 1 1 1 1 0 0 1 1 0 1 0 1];
     
     headerFrame = stream(1,:);
     dataFrames = stream(2:5,:);
     
-    assert(isequal(headerFrame(1:16), preambleRef));
+    assert(isequal(headerFrame(1:13), preambleRef));
     assert(isequal(headerFrame(161:224), zeros(1,64)));
     
     for i = 1 : 4
-        assert(isequal(dataFrames(i,1:16), preambleRef));
+        assert(isequal(dataFrames(i,1:13), preambleRef));
     end
     
     headerContent = headerFrame(1:224);
@@ -70,4 +71,3 @@ function [data] = unParseFrame(stream)
 
 
 end
-

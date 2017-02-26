@@ -2,13 +2,13 @@ function [frames] = parseFrame(data, scalingFactor)
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 
-    preamble = [1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0];
+    preamble = [1 1 1 1 1 0 0 1 1 0 1 0 1];
     numFrames = 4;
     samplesPerFrame = 30;
     
     dataFrames = [];
     for i = 1 : numFrames
-        frame = preamble;
+        frame = [preamble de2bi(i+1,3,'left-msb')];
         for j = 1 : samplesPerFrame
             dataPos = (i-1)*30 + j;
             dataDec = data(dataPos);
@@ -18,8 +18,7 @@ function [frames] = parseFrame(data, scalingFactor)
         dataFrames = [dataFrames; frame];
     end
     
-    header = [preamble de2bi(scalingFactor,16, 'left-msb')];
-    
+    header = [preamble de2bi(1,3,'left-msb') de2bi(scalingFactor,16, 'left-msb')];
     
     for i = 1 : numFrames
         header = [header crc32(dataFrames(i,:))];
@@ -31,4 +30,3 @@ function [frames] = parseFrame(data, scalingFactor)
     frames = [header; dataFrames];
     
 end
-
