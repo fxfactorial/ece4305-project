@@ -1,6 +1,6 @@
 function SensieTopLevel (moduleId)
 
-switch (1)
+switch (moduleId)
     case 0
         FREQ_MIN = 700e6;
     case 1
