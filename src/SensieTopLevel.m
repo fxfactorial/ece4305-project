@@ -1,13 +1,17 @@
-clear all;
-addpath(genpath('../drivers'));
+function SensieTopLevel (moduleId)
 
-FREQ_MIN = 700e6;
-kHz = 1000; % Hz
+switch (moduleId)
+    case 0
+        FREQ_MIN = 700e6;
+    case 1
+        FREQ_MIN = 1300e6;
+end
+
 Tx_INT = 2; % Minutes
 
 while (0 == 0)
     % create sweeper object (could also use constructor)
-   
+    
     sweeper = spectrumSweeper;
     sweeper.freq_min = FREQ_MIN;
     
@@ -16,12 +20,12 @@ while (0 == 0)
     spectrum = sweeper.getSpectrum();
     % scale to 8 bit integer
     disp('Scaling data...');
-    [spectrum_q , scaling_factor] = sweeper.scaleToInteger (spectrum, 8); 
+    [spectrum_q , scaling_factor] = sweeper.scaleToInteger (spectrum, 8);
     
     % wait until next Tx syncronization time
     disp('Waiting to transmit...')
-    while ~(mod(minute(datetime('now')), Tx_INT) == 0 && round(second(datetime('now'))) == 0)
-    end
+    while ~(mod(minute(datetime('now')) + moduleId, Tx_INT) == 0 && round(second(datetime('now'))) == 0)
+    end;
     
     % build frames
     disp('Building Frames...')
@@ -29,6 +33,7 @@ while (0 == 0)
     
     % transmit frames
     disp('Transmitting Frames')
-    transmitter(frames);
+    transmitter(frames );
     disp('Transmission complete')
+end
 end
