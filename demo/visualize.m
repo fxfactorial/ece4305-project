@@ -5,13 +5,13 @@ function [dataArray] = visualize(data, dataArray)
 % empty array. In the main script, set it to 'zeros(20, 120)'
 
 %% Validate input
-assert(isequal(size(data),[1 120]));
-assert(isequal(size(dataArray), [20 120]));
+assert(isequal(size(data),[1 240]));
+assert(isequal(size(dataArray), [20 240]));
 
 %% Define constants
-fMin = 1; % 1GHz
+fMin = 0.7; % 1GHz
 fStep = 0.005; % 5MHz = 0.005GHz
-fMax = 1.6 - fStep; % just less then 1.6GHz to get 120 samples.
+fMax = 1.9 - fStep; % just less then 1.6GHz to get 120 samples.
 
 numEventsToPlot = 20; % How many sensing events to plot in one graph?
 
