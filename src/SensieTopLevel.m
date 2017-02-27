@@ -1,15 +1,16 @@
 function SensieTopLevel (moduleId)
 
-switch (moduleId)
+switch (1)
     case 0
         FREQ_MIN = 700e6;
     case 1
         FREQ_MIN = 1300e6;
 end
 
-Tx_INT = 2; % Minutes
+Tx_INT = 5; % Minutes
 
 while (0 == 0)
+
     % create sweeper object (could also use constructor)
     
     sweeper = spectrumSweeper;
@@ -24,7 +25,7 @@ while (0 == 0)
     
     % wait until next Tx syncronization time
     disp('Waiting to transmit...')
-    while ~(mod(minute(datetime('now')) + moduleId, Tx_INT) == 0 && round(second(datetime('now'))) == 0)
+    while ~(mod(minute(datetime('now')) + moduleId*2, Tx_INT) == 0 && round(second(datetime('now'))) == 0)
     end;
     
     % build frames
@@ -33,7 +34,8 @@ while (0 == 0)
     
     % transmit frames
     disp('Transmitting Frames')
-    transmitter(frames );
+    transmitter(frames);
     disp('Transmission complete')
+    
 end
 end

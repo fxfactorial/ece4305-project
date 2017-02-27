@@ -46,14 +46,16 @@
                     
                     sdr = this.createRadio(Fc, this.rf_bw, Fs);
                     signal = sdr.receive();
-                    %freqData = abs(fft(signal, freq_bins));
                     freqData = sum(abs(signal).^2);
                     sweep_data = [sweep_data freqData.'];
-                    x_axis = (this.freq_min : this.rf_bw : ...
-                        ((length(sweep_data) - 1)*this.rf_bw + this.freq_min))./1e6;
-                    figure(1), semilogy(x_axis,sweep_data), xlabel('Frequency(MHz)')
-                    
-                    drawnow
+                    if (n > 1)
+                        sweep_data(1) = sweep_data(2);
+                        x_axis = (this.freq_min : this.rf_bw : ...
+                            ((length(sweep_data) - 1)*this.rf_bw + this.freq_min))./1e6;
+                        figure(1), semilogy(x_axis,sweep_data), xlabel('Frequency(MHz)')
+
+                        drawnow
+                    end
                 end
                 data(:,i) = sweep_data;
             end
@@ -64,6 +66,7 @@
             spectrum = mean(data, 2).';                
             % get log spectrum
             spectrum = log(spectrum);
+            clear sdr;
         end
         
         function [spectrum_q, scaling_factor] = scaleToInteger(this, spectrum, n)
