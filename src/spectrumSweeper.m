@@ -1,4 +1,4 @@
-classdef spectrumSweeper <handle
+ classdef spectrumSweeper <handle
     
     %% properties
     
@@ -35,23 +35,25 @@ classdef spectrumSweeper <handle
             % sampling rate
             Fs              = this.rf_bw; 
             % data of size sweepData x major sweeps
-            data = zeros(this.sweep_range/this.rf_bw, this.major_sweeps);    
+            data = zeros(this.sweep_range/this.rf_bw*freq_bins, this.major_sweeps);    
             
             for i = 1:this.major_sweeps
                 sweep_data = [];
                 for n = 1:minor_sweeps
                     Fc = this.freq_min + this.rf_bw*n - this.rf_bw/2;
+                    
                     disp(['Receving at carrier ', num2str(Fc/1000000), 'MHz'])
+                    
                     sdr = this.createRadio(Fc, this.rf_bw, Fs);
                     signal = sdr.receive();
+                    %freqData = abs(fft(signal, freq_bins));
                     freqData = sum(abs(signal).^2);
                     sweep_data = [sweep_data freqData.'];
-                     x_axis = (this.freq_min : this.rf_bw : ...
+                    x_axis = (this.freq_min : this.rf_bw : ...
                         ((length(sweep_data) - 1)*this.rf_bw + this.freq_min))./1e6;
                     figure(1), semilogy(x_axis,sweep_data), xlabel('Frequency(MHz)')
                     
                     drawnow
-
                 end
                 data(:,i) = sweep_data;
             end
@@ -107,7 +109,7 @@ classdef spectrumSweeper <handle
             %rx_gain Gain of RX chain(s) [dB]
             sdr.rx_gain = 10;             % RX_GAIN
             %tx_center_freq Center frequency of TX chain(s) [Hz]
-            sdr.tx_center_freq = rx_center_freq ;         % TX_LO_FREQ
+            sdr.tx_center_freq = 2.4e9 ;         % TX_LO_FREQ
             %tx_sample_rate Sample rate of TX chain(s) [Hz]
             sdr.tx_sample_rate = rx_sample_rate/2;        % TX_SAMPLING_FREQ
             %tx_rf_bandwidth Bandwidth of transmit filter [Hz]
