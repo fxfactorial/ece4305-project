@@ -4,50 +4,65 @@ clearvars; close all; clc;
 %% Define constants
 % Stores data; necessary for 'visualize.m'
 dataArray = zeros(20, 240);
+dataArray(1:20,1:240) = nan;
 data = [];
 
-timeMod = 2; % The zeroth minute occurs at datetime % timeMod == 0
+timeMod = 5; % The zeroth minute occurs at datetime % timeMod == 0
 
 % Aggregator loops every 5 minutes, as below:
 %
 % MIN.  EVENT
 % ----------
-% 0     IDLE
-% 1-3   RX1 -> FRAMES1
-% 3-6   RX2 -> FRAMES2 -> PLOT
-% 6-8   RX1 -> FRAMES1
-% 8-10  RX2 -> FRAMES2 -> PLOT
-rxTimeBGN1  = 60*1;
-rxTimeBGN2  = 60*3;
+% 0-2   RX1 -> FRAMES1
+% 2-4   RX2 -> FRAMES2
+% 4-5   FRAMES 
+rxTimeBGN1  = 60*0;
+rxTimeBGN2  = 60*2;
 loopTime    = 60*5;
 
-%% Wait for the zeroth minute
+disp('Waiting for start point')
 while true
-    currTime = datetime('now');
-    isMinuteValid = ~mod(minute(currTime), timeMod);
-    isSecondValid = ~round(second(currTime));
+    startPoint = datetime('now');
+    isMinuteValid = ~mod(minute(startPoint), timeMod);
+    isSecondValid = ~round(second(startPoint));
     if isMinuteValid && isSecondValid
         break
     end
 end
+disp('About to begin main while loop')
 
 %% Timestamp and enter while loop
-startPoint = datetime('now');
-while true
-    %% Wait, then RX1
-    while mod(round(seconds(datetime('now')-startPoint)), loopTime) ...
-            ~= rxTimeBGN1;
+while true 
+    %% RX1
+    disp('RX1 phase')
+    disp(datetime('now'))
+    frames1 = receiver();
+    %% Wait
+    disp('Wait phase 1')
+    disp(datetime('now'))
+    while mod(round(seconds(datetime('now')-startPoint)), loopTime) ~= rxTimeBGN2;
     end
-    frames1 = reciever();
-    %% Wait, then RX2
-    while mod(round(seconds(datetime('now')-startPoint)), loopTime) ...
-            ~= rxTimeBGN2;
+    %% RX2
+    disp('RX2 phase')
+    disp(datetime('now'))
+    frames2 = receiver();
+    %% Plot
+    disp('Plot phase')
+    disp(datetime('now'))
+    data1 = unParseFrame(frames1);
+    data2 = unParseFrame(frames2);
+    
+    if isequal(data1, zeros(1,120)) 
+        data1(1:120) = nan; 
     end
-    frames2 = reciever();
-    %% Plot, then wait
-    data1 = unParseFrames(frames1);
-    data2 = unParseFrames(frames2);
+    if isequal(data2, zeros(1,120)) 
+        data2(1:120) = nan; 
+    end
+    
     dataArray = visualize([data1 data2], dataArray);
-    while mod(round(seconds(datetime('now')-startPoint)), loopTime) ~= 0;
+    %% Wait
+    disp('Wait phase 2')
+    disp(datetime('now'))
+    while mod(round(seconds(datetime('now')-startPoint)), loopTime) ~= rxTimeBGN1;
     end
 end
