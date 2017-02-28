@@ -23,13 +23,19 @@ dataArray = circshift(dataArray, 1); % Shift all rows down
 dataArray(1,:) = data; % First row is now new data
 
 %% Plot
+figHandle = figure(1);
+set(figHandle,'Position', [1000, 100, 1049, 895]);
 surf(XFreqVector, YEventVector, dataArray);
 title('PlutoSDR Spectrum Waterfall')
 xlabel('Frequency (GHz)')
 ylabel('Measurement #')
 zlabel('Power (dB)')
-ylim([1 20])
+zlim([7 9.5])
 colormap jet
 colorbar
+drawnow
+xlim([fMin-0.1 fMax+0.1])
+ylim([1 20])
+
 
 end
