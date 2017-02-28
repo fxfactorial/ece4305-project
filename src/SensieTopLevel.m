@@ -25,7 +25,7 @@ while (0 == 0)
     
     % wait until next Tx syncronization time
     disp('Waiting to transmit...')
-    while ~(mod(minute(datetime('now')) + moduleId*2, Tx_INT) == 0 && round(second(datetime('now'))) == 0)
+    while ~(mod(minute(datetime('now')) + moduleId*3, Tx_INT) == 0 && round(second(datetime('now'))) == 0)
     end;
     
     % build frames
