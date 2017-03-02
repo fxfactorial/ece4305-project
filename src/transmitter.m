@@ -6,7 +6,7 @@ function [out] = transmitter(dataBin)
     
     % initalize SDR
     disp('Configure SDR to transmit...');
-    sdr = initSdr(2^20, 30.72e6, 916e6, 2e6, 5e6, 15, 'manual', 'transceive');
+    sdr = initSdr(2^20,2^20, 30.72e6, 816e6, 916e6, 2e6, 5e6, 15, 'manual', 'transceive');
     
     numFrames = size(dataBin,1);
 %% Create Waveforms from the data
